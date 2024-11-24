@@ -110,7 +110,7 @@ class FinancialDocumentAnalyzer:
 # Main app logic
 def main():
 
-    authenticate(st.secrets["openai"]["your-api-key"]) 
+    authenticate(st.secrets["openai"]) 
 
     analyzer = FinancialDocumentAnalyzer()
     
