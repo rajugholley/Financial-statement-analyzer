@@ -44,41 +44,33 @@ class FinancialDocumentAnalyzer:
     # Different prompts for different analysis types
         prompts = {
             "Financial Statements Only": """
-             You are a financial analyst. Extract specific numbers from the document and provide detailed analysis.
-        IMPORTANT: Find actual numbers and calculate metrics. Don't use placeholders like X or [X].
+             Extract and present the analysis in EXACT table formats shown below. Do not deviate from these formats and do not have placeholders.
+            You must have numerical numbers calculated in places of the [X] placeholders.
 
         ## 📈 Revenue Analysis
-        1. Find actual revenue numbers for current and previous year
-        2. Calculate YoY growth using: ((Current - Previous)/Previous) × 100
-        3. Present in table format:
 
-        | Revenue Type | Amount | YoY Growth |
-        |-------------|---------|------------|
-        | Own-source  | [Extract actual $] | [Calculate actual %] |
-        | Administered| [Extract actual $] | [Calculate actual %] |
+        <First Table>
+        | Revenue Type | Current Amount ($M) | Previous Amount ($M) | YoY Growth |
+        |-------------|---------------------|---------------------|------------|
+        | Own-source  | [Current Amount]    | [Previous Amount]   | [Growth %] |
+        | Administered| [Current Amount]    | [Previous Amount]   | [Growth %] |
 
         ## 💰 Profitability Metrics
-        1. Find revenue and profit numbers
-        2. Calculate all margins using actual numbers
-        3. Present in table:
 
-        | Metric | Value | Change |
-        |--------|-------|--------|
-        | Gross Margin | [Calculate from (Gross Profit/Revenue) × 100] | [Show actual change] |
-        | Operating Margin | [Calculate from (Operating Profit/Revenue) × 100] | [Show actual change] |
-        | Net Margin | [Calculate from (Net Profit/Revenue) × 100] | [Show actual change] |
+        <Second Table>
+        | Profitability Metric | Current Value | Previous Value | Change |
+        |---------------------|---------------|----------------|--------|
+        | Gross Margin        | [X]%          | [Y]%          | [Z]%   |
+        | Operating Margin    | [X]%          | [Y]%          | [Z]%   |
+        | Net Margin          | [X]%          | [Y]%          | [Z]%   |
 
-        ## 🔍 Key Highlights
-        • Quote specific numbers and percentages
-        • Highlight actual changes
-        • Use concrete figures
-
-        Make sure to:
-        - Use actual numbers found in the text
-        - Show real calculations
-        - Don't leave any metrics as X or [X]
-        - Include % signs for percentages
-        - Include $ signs for monetary values
+        IMPORTANT:
+        - MUST present data in these exact table formats
+        - Fill in all values with actual numbers from text
+        - Include $ for monetary values and % for percentages
+        - Do not show calculations, only final values
+        - No text explanations between tables
+        - Keep formatting exactly as shown
 
         Document Text:
         {text}
