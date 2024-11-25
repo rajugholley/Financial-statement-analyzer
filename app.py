@@ -67,6 +67,7 @@ class FinancialDocumentAnalyzer:
         • [High Impact Point 3]
 
         Note: Present all numbers clearly without formulae. Use plain text formatting.
+
         Document Text:
         {text}
             """,
