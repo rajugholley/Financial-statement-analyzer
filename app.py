@@ -7,35 +7,6 @@ import pdfplumber
 # Page config
 st.set_page_config(page_title="Financial Statement Analyzer", layout="wide")
 
-# Title
-st.title("📊 Financial Statement Analyzer")
-st.write("Upload financial statements for automated analysis")
-
-# ------------ This is the UI section where drop down options can be selected uploaded)
-analysis_type = st.selectbox(
-    "Select Analysis Type",
-    [
-        "Financial Statements Only",
-        "Management Commentary Analysis",
-        "Risk Factors Assessment",
-        "Management Commentary vs Financial Performance",
-    ]
-)
-
-# Add description
-analysis_descriptions = {
-    "Financial Statements Only": "Analysis of key financial metrics, ratios, and performance indicators",
-    "Management Commentary Analysis": "Review of management's discussion, strategic outlook, and key initiatives",
-    "Risk Factors Assessment": "Analysis of disclosed risks and their potential impact",
-    "Management Commentary vs Financial Performance": "Alignment between management's narrative and actual financial results"
-}
-
-st.write(analysis_descriptions[analysis_type])
-
-# Then your existing file upload code
-uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
-
-
 # Your FinancialDocumentAnalyzer class here
 class FinancialDocumentAnalyzer:
     def __init__(self):
@@ -196,21 +167,40 @@ class FinancialDocumentAnalyzer:
 
 # Main app logic
 def main():
+    st.title("📊 Financial Statement Analyzer")
+    st.write("Upload financial statements for automated analysis")
 
-    authenticate(st.secrets["openai"]) 
+    # Single instance of selectbox
+    analysis_type = st.selectbox(
+        "Select Analysis Type",
+        [
+            "Financial Statements Only",
+            "Management Commentary Analysis",
+            "Risk Factors Assessment",
+            "Management Commentary vs Financial Performance",
+        ],
+        key="analysis_type_select"  # Add unique key
+    )
 
-    analyzer = FinancialDocumentAnalyzer()
-    
-    # File upload
-    uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
-    
+    # Description
+    analysis_descriptions = {
+        "Financial Statements Only": "Analysis of key financial metrics, ratios, and performance indicators",
+        "Management Commentary Analysis": "Review of management's discussion, strategic outlook, and key initiatives",
+        "Risk Factors Assessment": "Analysis of disclosed risks and their potential impact",
+        "Management Commentary vs Financial Performance": "Alignment between management's narrative and actual financial results"
+    }
+
+    st.write(analysis_descriptions[analysis_type])
+
+    # Single file uploader
+    uploaded_file = st.file_uploader("Choose a PDF file", type="pdf", key="pdf_uploader")
+
     if uploaded_file is not None:
         with st.spinner('Analyzing document...'):
             text = analyzer.extract_text_from_pdf(uploaded_file)
             if text.startswith("Error"):
                 st.error(text)
             else:
-                # Pass selected analysis type
                 analysis = analyzer.analyze_document(text, analysis_type)
                 st.write(analysis)
 
