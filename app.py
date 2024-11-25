@@ -56,8 +56,11 @@ class FinancialDocumentAnalyzer:
     
     # ----------this function defines the main prompt that is passed to the LLM for financial statement analysis & insights -------- #
 
-    def analyze_document(self, text, document_type="financial_statement"):
-        prompts = {
+    def analyze_document(self, text, analysis_type="Financial Statements Only"):
+    """Analyze document based on selected type"""
+    
+    # Different prompts for different analysis types
+    prompts = {
         "Financial Statements Only": """
         Analyze the financial statements section focusing only on numerical data and metrics.
         
@@ -141,10 +144,10 @@ class FinancialDocumentAnalyzer:
     # Add document text to prompt
     full_prompt = f"""
     {selected_prompt}
-    
+
     Document Text:
     {text}
-    
+
     Provide analysis in clear, structured format with headers and bullet points.
     """
     
@@ -152,8 +155,7 @@ class FinancialDocumentAnalyzer:
         return get_llm_response(full_prompt)
     except Exception as e:
         return f"Error in analysis: {str(e)}"
-
-
+ 
     # ----------this function defines the prompt for LLM to compare two financial statement and then provides a comparative analysis.  -------- #
   
     def compare_statements(self, text1, text2, period1="Current", period2="Previous"):
