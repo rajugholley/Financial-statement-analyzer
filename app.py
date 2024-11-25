@@ -44,8 +44,11 @@ class FinancialDocumentAnalyzer:
     # Different prompts for different analysis types
         prompts = {
             "Financial Statements Only": """
-             Present a clear financial analysis using the following HTML format exactly:
-
+             You are a financial analyst. Your task is to:
+        1. FIRST: Carefully read and extract all financial numbers from the text
+        2. SECOND: Calculate required metrics using extracted numbers
+        3. THIRD: Present a clear financial analysis in the exact html format below with ACTUAL NUMBERS (no placeholders0
+             
         <h2>📈 Revenue Analysis</h2>
         <table>
             <tr>
@@ -138,12 +141,17 @@ class FinancialDocumentAnalyzer:
         • [Key risk or opportunity]
 
         CRITICAL INSTRUCTIONS:
-        1. Replace ALL placeholders with actual numbers from the document
+        1. Replace ALL placeholders with actual numbers from the document.DO NOT LEAVE ANY VALUE BLANK OR AS PLACEHOLDER(e.g:[X])
         2. Use exact HTML table format shown
         3. Show percentage signs (%) where applicable
         4. Use 🟢 for good performance, 🔴 for below benchmark
         5. Round percentages to 2 decimal places
         6. Use $M for millions in monetary values
+        7. If you can't find a specific number, write "Not Available" 
+        8. If you can't calculate something, write "Insufficient Data"
+        9. ALWAYS show your source numbers from the text
+        10.For each table row, cite where you found the numbers
+        11.Show brief calculation method for derived metrics
 
         Document Text:
         {text}
