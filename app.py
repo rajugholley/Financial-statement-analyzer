@@ -174,6 +174,7 @@ class FinancialDocumentAnalyzer:
 
 # Main app logic
 def main():
+    authenticate(st.secrets["openai"])  # Make sure this runs first
     st.title("📊 Financial Statement Analyzer")
     st.write("Upload financial statements for automated analysis")
 
