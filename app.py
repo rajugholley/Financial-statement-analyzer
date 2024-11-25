@@ -57,105 +57,104 @@ class FinancialDocumentAnalyzer:
     # ----------this function defines the main prompt that is passed to the LLM for financial statement analysis & insights -------- #
 
     def analyze_document(self, text, analysis_type="Financial Statements Only"):
-    """Analyze document based on selected type"""
     
     # Different prompts for different analysis types
-    prompts = {
-        "Financial Statements Only": """
-        Analyze the financial statements section focusing only on numerical data and metrics.
+        prompts = {
+            "Financial Statements Only": """
+            Analyze the financial statements section focusing only on numerical data and metrics.
+            
+            Provide analysis of:
+            1. Key Financial Metrics:
+            - Revenue, Profit margins
+            - Cash flow metrics
+            - Balance sheet ratios
+            
+            2. Performance Indicators:
+            - YoY growth rates
+            - Profitability trends
+            - Liquidity position
+            
+            3. Financial Health:
+            - Key ratios analysis
+            - Working capital
+            - Debt metrics
+            
+            Focus only on quantitative analysis and financial metrics.
+            """,
+            
+            "Management Commentary Analysis": """
+            Analyze the management discussion section focusing on:
+            
+            1. Strategic Initiatives:
+            - Key business strategies
+            - Market expansion plans
+            - Product/Service initiatives
+            
+            2. Business Outlook:
+            - Future projections
+            - Market conditions
+            - Growth expectations
+            
+            3. Key Developments:
+            - Major business updates
+            - Operational changes
+            - Strategic decisions
+            
+            Focus on qualitative analysis from management's perspective.
+            """,
+            
+            "Risk Factors Assessment": """
+            Analyze the risk factors and provide:
+            
+            1. Key Risk Categories:
+            - Market risks
+            - Operational risks
+            - Financial risks
+            - Regulatory risks
+            
+            2. Risk Impact Analysis:
+            - Potential business impact
+            - Mitigation strategies
+            - Risk prioritization
+            
+            Focus on identifying and analyzing disclosed risks.
+            """,
+            
+            "Management Commentary vs Financial Performance": """
+            Compare management's commentary with actual financial performance:
+            
+            1. Alignment Analysis:
+            - Stated objectives vs results
+            - Growth projections vs actual
+            - Strategic goals vs achievements
+            
+            2. Gap Analysis:
+            - Identify discrepancies
+            - Explain variations
+            - Highlight achievements
+            
+            Focus on correlation between management statements and financial results.
+            """
+        }
         
-        Provide analysis of:
-        1. Key Financial Metrics:
-           - Revenue, Profit margins
-           - Cash flow metrics
-           - Balance sheet ratios
+        # Get appropriate prompt
+        selected_prompt = prompts[analysis_type]
         
-        2. Performance Indicators:
-           - YoY growth rates
-           - Profitability trends
-           - Liquidity position
-        
-        3. Financial Health:
-           - Key ratios analysis
-           - Working capital
-           - Debt metrics
-        
-        Focus only on quantitative analysis and financial metrics.
-        """,
-        
-        "Management Commentary Analysis": """
-        Analyze the management discussion section focusing on:
-        
-        1. Strategic Initiatives:
-           - Key business strategies
-           - Market expansion plans
-           - Product/Service initiatives
-        
-        2. Business Outlook:
-           - Future projections
-           - Market conditions
-           - Growth expectations
-        
-        3. Key Developments:
-           - Major business updates
-           - Operational changes
-           - Strategic decisions
-        
-        Focus on qualitative analysis from management's perspective.
-        """,
-        
-        "Risk Factors Assessment": """
-        Analyze the risk factors and provide:
-        
-        1. Key Risk Categories:
-           - Market risks
-           - Operational risks
-           - Financial risks
-           - Regulatory risks
-        
-        2. Risk Impact Analysis:
-           - Potential business impact
-           - Mitigation strategies
-           - Risk prioritization
-        
-        Focus on identifying and analyzing disclosed risks.
-        """,
-        
-        "Management Commentary vs Financial Performance": """
-        Compare management's commentary with actual financial performance:
-        
-        1. Alignment Analysis:
-           - Stated objectives vs results
-           - Growth projections vs actual
-           - Strategic goals vs achievements
-        
-        2. Gap Analysis:
-           - Identify discrepancies
-           - Explain variations
-           - Highlight achievements
-        
-        Focus on correlation between management statements and financial results.
+        # Add document text to prompt
+        full_prompt = f"""
+        {selected_prompt}
+
+        Document Text:
+        {text}
+
+        Provide analysis in clear, structured format with headers and bullet points.
         """
-    }
+        
+        try:
+            return get_llm_response(full_prompt)
+        except Exception as e:
+            return f"Error in analysis: {str(e)}"
     
-    # Get appropriate prompt
-    selected_prompt = prompts[analysis_type]
-    
-    # Add document text to prompt
-    full_prompt = f"""
-    {selected_prompt}
-
-    Document Text:
-    {text}
-
-    Provide analysis in clear, structured format with headers and bullet points.
-    """
-    
-    try:
-        return get_llm_response(full_prompt)
-    except Exception as e:
-        return f"Error in analysis: {str(e)}"
- 
     # ----------this function defines the prompt for LLM to compare two financial statement and then provides a comparative analysis.  -------- #
   
     def compare_statements(self, text1, text2, period1="Current", period2="Previous"):
