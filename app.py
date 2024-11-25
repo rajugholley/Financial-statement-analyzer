@@ -7,6 +7,13 @@ import pdfplumber
 # Page config
 st.set_page_config(page_title="Financial Statement Analyzer", layout="wide")
 
+analysis_descriptions = {
+    "Financial Statements Only": "Analysis of key financial metrics, ratios, and performance indicators",
+    "Management Commentary Analysis": "Review of management's discussion, strategic outlook, and key initiatives",
+    "Risk Factors Assessment": "Analysis of disclosed risks and their potential impact",
+    "Management Commentary vs Financial Performance": "Alignment between management's narrative and actual financial results"
+}
+
 # Your FinancialDocumentAnalyzer class here
 class FinancialDocumentAnalyzer:
     def __init__(self):
