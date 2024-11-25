@@ -11,6 +11,31 @@ st.set_page_config(page_title="Financial Statement Analyzer", layout="wide")
 st.title("📊 Financial Statement Analyzer")
 st.write("Upload financial statements for automated analysis")
 
+# ------------ This is the UI section where drop down options can be selected uploaded)
+analysis_type = st.selectbox(
+    "Select Analysis Type",
+    [
+        "Financial Statements Only",
+        "Management Commentary Analysis",
+        "Risk Factors Assessment",
+        "Management Commentary vs Financial Performance",
+    ]
+)
+
+# Add description
+analysis_descriptions = {
+    "Financial Statements Only": "Analysis of key financial metrics, ratios, and performance indicators",
+    "Management Commentary Analysis": "Review of management's discussion, strategic outlook, and key initiatives",
+    "Risk Factors Assessment": "Analysis of disclosed risks and their potential impact",
+    "Management Commentary vs Financial Performance": "Alignment between management's narrative and actual financial results"
+}
+
+st.write(analysis_descriptions[analysis_type])
+
+# Then your existing file upload code
+uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
+
+
 # Your FinancialDocumentAnalyzer class here
 class FinancialDocumentAnalyzer:
     def __init__(self):
@@ -32,40 +57,101 @@ class FinancialDocumentAnalyzer:
     # ----------this function defines the main prompt that is passed to the LLM for financial statement analysis & insights -------- #
 
     def analyze_document(self, text, document_type="financial_statement"):
-        prompt = f"""
-        You are a senior financial analyst. Analyze this {document_type} and provide analysis.
-    Present calculations in simple format, like "Gross Profit Margin = $1.9M / $4.8M = 39.58%"
-    Do NOT use LaTeX formatting or backslashes.
+        prompts = {
+        "Financial Statements Only": """
+        Analyze the financial statements section focusing only on numerical data and metrics.
         
-        1. Financial Health Indicators:
-           - Profitability ratios
-           - Liquidity assessment
-           - Operational efficiency
+        Provide analysis of:
+        1. Key Financial Metrics:
+           - Revenue, Profit margins
+           - Cash flow metrics
+           - Balance sheet ratios
         
-        2. Business Performance:
-           - Year-over-year growth rates
-           - Industry benchmark comparison
-           - Key performance trends
+        2. Performance Indicators:
+           - YoY growth rates
+           - Profitability trends
+           - Liquidity position
         
-        3. Risk Assessment:
-           - Financial leverage
-           - Cash flow stability
+        3. Financial Health:
+           - Key ratios analysis
+           - Working capital
+           - Debt metrics
+        
+        Focus only on quantitative analysis and financial metrics.
+        """,
+        
+        "Management Commentary Analysis": """
+        Analyze the management discussion section focusing on:
+        
+        1. Strategic Initiatives:
+           - Key business strategies
+           - Market expansion plans
+           - Product/Service initiatives
+        
+        2. Business Outlook:
+           - Future projections
+           - Market conditions
+           - Growth expectations
+        
+        3. Key Developments:
+           - Major business updates
+           - Operational changes
+           - Strategic decisions
+        
+        Focus on qualitative analysis from management's perspective.
+        """,
+        
+        "Risk Factors Assessment": """
+        Analyze the risk factors and provide:
+        
+        1. Key Risk Categories:
+           - Market risks
            - Operational risks
+           - Financial risks
+           - Regulatory risks
         
-        4. Strategic Recommendations:
-           - Areas for improvement
-           - Potential opportunities
-           - Suggested actions
+        2. Risk Impact Analysis:
+           - Potential business impact
+           - Mitigation strategies
+           - Risk prioritization
         
-        Document Text:
-        {text}
+        Focus on identifying and analyzing disclosed risks.
+        """,
         
-        Provide detailed analysis with specific metrics where possible. Use industry standard calculations.
-        """   
-        try:
-            return get_llm_response(prompt)
-        except Exception as e:
-            return f"Error in analysis: {str(e)}"
+        "Management Commentary vs Financial Performance": """
+        Compare management's commentary with actual financial performance:
+        
+        1. Alignment Analysis:
+           - Stated objectives vs results
+           - Growth projections vs actual
+           - Strategic goals vs achievements
+        
+        2. Gap Analysis:
+           - Identify discrepancies
+           - Explain variations
+           - Highlight achievements
+        
+        Focus on correlation between management statements and financial results.
+        """
+    }
+    
+    # Get appropriate prompt
+    selected_prompt = prompts[analysis_type]
+    
+    # Add document text to prompt
+    full_prompt = f"""
+    {selected_prompt}
+    
+    Document Text:
+    {text}
+    
+    Provide analysis in clear, structured format with headers and bullet points.
+    """
+    
+    try:
+        return get_llm_response(full_prompt)
+    except Exception as e:
+        return f"Error in analysis: {str(e)}"
 
 
     # ----------this function defines the prompt for LLM to compare two financial statement and then provides a comparative analysis.  -------- #
@@ -118,16 +204,14 @@ def main():
     uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
     
     if uploaded_file is not None:
-        with st.spinner('Analyzing document...'):
-            # Extract text
-            text = analyzer.extract_text_from_pdf(uploaded_file)
-            
-            # Show analysis
-            if text.startswith("Error"):
-                st.error(text)
-            else:
-                analysis = analyzer.analyze_document(text)
-                st.write(analysis)
+    with st.spinner('Analyzing document...'):
+        text = analyzer.extract_text_from_pdf(uploaded_file)
+        if text.startswith("Error"):
+            st.error(text)
+        else:
+            # Pass selected analysis type
+            analysis = analyzer.analyze_document(text, analysis_type)
+            st.write(analysis)
 
 if __name__ == "__main__":
     main()
