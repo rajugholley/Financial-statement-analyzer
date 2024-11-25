@@ -44,36 +44,29 @@ class FinancialDocumentAnalyzer:
     # Different prompts for different analysis types
         prompts = {
             "Financial Statements Only": """
-            Analyze the financial data and provide SPECIFIC NUMERICAL calculations:
+             Analyze the financial data and provide analysis in this format:
 
-        1. Revenue Analysis:
-           - Extract exact revenue numbers
-           - Calculate YoY growth rates with percentages
-           - Show all calculations explicitly
+        ## 📈 Revenue Analysis
+        ### Revenue Numbers
+        | Revenue Type | Amount | YoY Growth |
+        |-------------|---------|------------|
+        | Own-source  | $[X]M   | [X]%       |
+        | Administered| $[X]M   | [X]%       |
 
-        2. Profitability Metrics:
-           - Gross Profit Margin = (Revenue - COGS) / Revenue × 100
-           - Operating Margin = Operating Income / Revenue × 100
-           - Net Profit Margin = Net Income / Revenue × 100
-           [Show all calculations with actual numbers]
+        ## 💰 Profitability Metrics
+        ### Margins
+        | Metric | Value | Change |
+        |--------|-------|--------|
+        | Gross Margin | [X]% | ▲/▼ [X]% |
+        | Operating Margin | [X]% | ▲/▼ [X]% |
+        | Net Margin | [X]% | ▲/▼ [X]% |
 
-        3. Balance Sheet Ratios:
-           - Current Ratio = Current Assets / Current Liabilities
-           - Quick Ratio = (Current Assets - Inventory) / Current Liabilities
-           - Debt-to-Equity = Total Liabilities / Total Equity
-           [Calculate using actual numbers]
+        ## 🔍 Key Highlights
+        • [High Impact Point 1]
+        • [High Impact Point 2]
+        • [High Impact Point 3]
 
-        4. Cash Flow Analysis:
-           - Operating Cash Flow Ratio
-           - Free Cash Flow calculations
-           [Show detailed calculations]
-
-        Important: 
-        - Extract and use actual numbers from the text
-        - Show all calculations step by step
-        - Present results in table format where possible
-        - Include numerical values for all metrics
-
+        Note: Present all numbers clearly without formulae. Use plain text formatting.
         Document Text:
         {text}
             """,
