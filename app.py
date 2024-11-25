@@ -54,49 +54,96 @@ class FinancialDocumentAnalyzer:
                 <th>Previous ($M)</th>
                 <th>Growth</th>
             </tr>
-            <tr>
-                <td>Own-source</td>
-                <td>[Insert actual number]</td>
-                <td>[Insert actual number]</td>
-                <td>[Calculate]%</td>
-            </tr>
-            <tr>
-                <td>Administered</td>
-                <td>[Insert actual number]</td>
-                <td>[Insert actual number]</td>
-                <td>[Calculate]%</td>
-            </tr>
+            
         </table>
 
         <h2>💰 Profitability Analysis</h2>
         <table>
             <tr>
                 <th>Metric</th>
-                <th>Current</th>
-                <th>Previous</th>
-                <th>Change</th>
+                <th>Value</th>
+                <th>Industry Avg</th>
+                <th>Status</th>
             </tr>
             <tr>
-                <td>Gross Margin</td>
+                <td>Gross Profit Margin</td>
                 <td>[X]%</td>
                 <td>[Y]%</td>
-                <td>[Z]%</td>
+                <td>🟢/🔴</td>
             </tr>
             <tr>
                 <td>Operating Margin</td>
                 <td>[X]%</td>
                 <td>[Y]%</td>
-                <td>[Z]%</td>
+                <td>🟢/🔴</td>
+            </tr>
+            <tr>
+                <td>Net Profit Margin</td>
+                <td>[X]%</td>
+                <td>[Y]%</td>
+                <td>🟢/🔴</td>
             </tr>
         </table>
 
+        <h2>📊 Balance Sheet Ratios</h2>
+        <table>
+            <tr>
+                <th>Ratio</th>
+                <th>Value</th>
+                <th>Benchmark</th>
+                <th>Status</th>
+            </tr>
+            <tr>
+                <td>Current Ratio</td>
+                <td>[X]</td>
+                <td>> 2.0</td>
+                <td>🟢/🔴</td>
+            </tr>
+            <tr>
+                <td>Quick Ratio</td>
+                <td>[X]</td>
+                <td>> 1.0</td>
+                <td>🟢/🔴</td>
+            </tr>
+            <tr>
+                <td>Debt/Equity</td>
+                <td>[X]</td>
+                <td>< 2.0</td>
+                <td>🟢/🔴</td>
+            </tr>
+        </table>
+
+        <h2>💵 Cash Flow Metrics</h2>
+        <table>
+            <tr>
+                <th>Metric</th>
+                <th>Amount ($M)</th>
+                <th>% of Revenue</th>
+            </tr>
+            <tr>
+                <td>Operating Cash Flow</td>
+                <td>[X]</td>
+                <td>[Y]%</td>
+            </tr>
+            <tr>
+                <td>Free Cash Flow</td>
+                <td>[X]</td>
+                <td>[Y]%</td>
+            </tr>
+        </table>
+
+        <h2>🎯 Key Highlights</h2>
+        • [Most significant metric] changed by [X]%
+        • [Second most important observation]
+        • [Key risk or opportunity]
+
         CRITICAL INSTRUCTIONS:
-        1. Replace ALL placeholders with actual numbers
-        2. Use exact HTML format shown
-        3. Include % signs for percentages
-        4. Include $ signs for monetary values
-        5. No explanatory text between tables
-        6. No calculations shown, only results
+        1. Replace ALL placeholders with actual numbers from the document
+        2. Use exact HTML table format shown
+        3. Show percentage signs (%) where applicable
+        4. Use 🟢 for good performance, 🔴 for below benchmark
+        5. Round percentages to 2 decimal places
+        6. Use $M for millions in monetary values
 
         Document Text:
         {text}
