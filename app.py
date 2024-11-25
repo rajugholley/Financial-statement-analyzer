@@ -44,33 +44,59 @@ class FinancialDocumentAnalyzer:
     # Different prompts for different analysis types
         prompts = {
             "Financial Statements Only": """
-             Extract and present the analysis in EXACT table formats shown below. Do not deviate from these formats and do not have placeholders.
-            You must have numerical numbers calculated in places of the [X] placeholders.
+             Present a clear financial analysis using the following HTML format exactly:
 
-        ## 📈 Revenue Analysis
+        <h2>📈 Revenue Analysis</h2>
+        <table>
+            <tr>
+                <th>Revenue Type</th>
+                <th>Current ($M)</th>
+                <th>Previous ($M)</th>
+                <th>Growth</th>
+            </tr>
+            <tr>
+                <td>Own-source</td>
+                <td>[Insert actual number]</td>
+                <td>[Insert actual number]</td>
+                <td>[Calculate]%</td>
+            </tr>
+            <tr>
+                <td>Administered</td>
+                <td>[Insert actual number]</td>
+                <td>[Insert actual number]</td>
+                <td>[Calculate]%</td>
+            </tr>
+        </table>
 
-        <First Table>
-        | Revenue Type | Current Amount ($M) | Previous Amount ($M) | YoY Growth |
-        |-------------|---------------------|---------------------|------------|
-        | Own-source  | [Current Amount]    | [Previous Amount]   | [Growth %] |
-        | Administered| [Current Amount]    | [Previous Amount]   | [Growth %] |
+        <h2>💰 Profitability Analysis</h2>
+        <table>
+            <tr>
+                <th>Metric</th>
+                <th>Current</th>
+                <th>Previous</th>
+                <th>Change</th>
+            </tr>
+            <tr>
+                <td>Gross Margin</td>
+                <td>[X]%</td>
+                <td>[Y]%</td>
+                <td>[Z]%</td>
+            </tr>
+            <tr>
+                <td>Operating Margin</td>
+                <td>[X]%</td>
+                <td>[Y]%</td>
+                <td>[Z]%</td>
+            </tr>
+        </table>
 
-        ## 💰 Profitability Metrics
-
-        <Second Table>
-        | Profitability Metric | Current Value | Previous Value | Change |
-        |---------------------|---------------|----------------|--------|
-        | Gross Margin        | [X]%          | [Y]%          | [Z]%   |
-        | Operating Margin    | [X]%          | [Y]%          | [Z]%   |
-        | Net Margin          | [X]%          | [Y]%          | [Z]%   |
-
-        IMPORTANT:
-        - MUST present data in these exact table formats
-        - Fill in all values with actual numbers from text
-        - Include $ for monetary values and % for percentages
-        - Do not show calculations, only final values
-        - No text explanations between tables
-        - Keep formatting exactly as shown
+        CRITICAL INSTRUCTIONS:
+        1. Replace ALL placeholders with actual numbers
+        2. Use exact HTML format shown
+        3. Include % signs for percentages
+        4. Include $ signs for monetary values
+        5. No explanatory text between tables
+        6. No calculations shown, only results
 
         Document Text:
         {text}
@@ -256,7 +282,7 @@ def main():
                         st.error(text)
                     else:
                         analysis = analyzer.analyze_document(text, analysis_type)
-                        st.write(analysis)
+                        st.markdown(analysis, unsafe_allow_html=True)
 
         except Exception as e:
             st.error(f"Error during analysis: {str(e)}")
