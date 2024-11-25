@@ -204,14 +204,14 @@ def main():
     uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
     
     if uploaded_file is not None:
-    with st.spinner('Analyzing document...'):
-        text = analyzer.extract_text_from_pdf(uploaded_file)
-        if text.startswith("Error"):
-            st.error(text)
-        else:
-            # Pass selected analysis type
-            analysis = analyzer.analyze_document(text, analysis_type)
-            st.write(analysis)
+        with st.spinner('Analyzing document...'):
+            text = analyzer.extract_text_from_pdf(uploaded_file)
+            if text.startswith("Error"):
+                st.error(text)
+            else:
+                # Pass selected analysis type
+                analysis = analyzer.analyze_document(text, analysis_type)
+                st.write(analysis)
 
 if __name__ == "__main__":
     main()
