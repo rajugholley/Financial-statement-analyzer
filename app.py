@@ -44,25 +44,38 @@ class FinancialDocumentAnalyzer:
     # Different prompts for different analysis types
         prompts = {
             "Financial Statements Only": """
-            Analyze the financial statements section focusing only on numerical data and metrics.
-            
-            Provide analysis of:
-            1. Key Financial Metrics:
-            - Revenue, Profit margins
-            - Cash flow metrics
-            - Balance sheet ratios
-            
-            2. Performance Indicators:
-            - YoY growth rates
-            - Profitability trends
-            - Liquidity position
-            
-            3. Financial Health:
-            - Key ratios analysis
-            - Working capital
-            - Debt metrics
-            
-            Focus only on quantitative analysis and financial metrics.
+            Analyze the financial data and provide SPECIFIC NUMERICAL calculations:
+
+        1. Revenue Analysis:
+           - Extract exact revenue numbers
+           - Calculate YoY growth rates with percentages
+           - Show all calculations explicitly
+
+        2. Profitability Metrics:
+           - Gross Profit Margin = (Revenue - COGS) / Revenue × 100
+           - Operating Margin = Operating Income / Revenue × 100
+           - Net Profit Margin = Net Income / Revenue × 100
+           [Show all calculations with actual numbers]
+
+        3. Balance Sheet Ratios:
+           - Current Ratio = Current Assets / Current Liabilities
+           - Quick Ratio = (Current Assets - Inventory) / Current Liabilities
+           - Debt-to-Equity = Total Liabilities / Total Equity
+           [Calculate using actual numbers]
+
+        4. Cash Flow Analysis:
+           - Operating Cash Flow Ratio
+           - Free Cash Flow calculations
+           [Show detailed calculations]
+
+        Important: 
+        - Extract and use actual numbers from the text
+        - Show all calculations step by step
+        - Present results in table format where possible
+        - Include numerical values for all metrics
+
+        Document Text:
+        {text}
             """,
             
             "Management Commentary Analysis": """
