@@ -44,29 +44,41 @@ class FinancialDocumentAnalyzer:
     # Different prompts for different analysis types
         prompts = {
             "Financial Statements Only": """
-             Analyze the financial data and provide analysis in this format:
+             You are a financial analyst. Extract specific numbers from the document and provide detailed analysis.
+        IMPORTANT: Find actual numbers and calculate metrics. Don't use placeholders like X or [X].
 
         ## 📈 Revenue Analysis
-        ### Revenue Numbers
+        1. Find actual revenue numbers for current and previous year
+        2. Calculate YoY growth using: ((Current - Previous)/Previous) × 100
+        3. Present in table format:
+
         | Revenue Type | Amount | YoY Growth |
         |-------------|---------|------------|
-        | Own-source  | $[X]M   | [X]%       |
-        | Administered| $[X]M   | [X]%       |
+        | Own-source  | [Extract actual $] | [Calculate actual %] |
+        | Administered| [Extract actual $] | [Calculate actual %] |
 
         ## 💰 Profitability Metrics
-        ### Margins
+        1. Find revenue and profit numbers
+        2. Calculate all margins using actual numbers
+        3. Present in table:
+
         | Metric | Value | Change |
         |--------|-------|--------|
-        | Gross Margin | [X]% | ▲/▼ [X]% |
-        | Operating Margin | [X]% | ▲/▼ [X]% |
-        | Net Margin | [X]% | ▲/▼ [X]% |
+        | Gross Margin | [Calculate from (Gross Profit/Revenue) × 100] | [Show actual change] |
+        | Operating Margin | [Calculate from (Operating Profit/Revenue) × 100] | [Show actual change] |
+        | Net Margin | [Calculate from (Net Profit/Revenue) × 100] | [Show actual change] |
 
         ## 🔍 Key Highlights
-        • [High Impact Point 1]
-        • [High Impact Point 2]
-        • [High Impact Point 3]
+        • Quote specific numbers and percentages
+        • Highlight actual changes
+        • Use concrete figures
 
-        Note: Present all numbers clearly without formulae. Use plain text formatting.
+        Make sure to:
+        - Use actual numbers found in the text
+        - Show real calculations
+        - Don't leave any metrics as X or [X]
+        - Include % signs for percentages
+        - Include $ signs for monetary values
 
         Document Text:
         {text}
