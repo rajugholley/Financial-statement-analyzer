@@ -20,18 +20,23 @@ class FinancialDocumentAnalyzer:
         pass
 
     #----------- this function defined the logic to extract text from pdf -------- #
-    def extract_text_from_pdf(self, pdf_path):
-        """Extract text from PDF file"""
+    def extract_text_from_pdf(self, pdf_file, start_page=1, end_page=None):
+        """Extract text from specific pages of PDF file"""
         try:
-            with pdfplumber.open(pdf_path) as pdf:
+            with pdfplumber.open(pdf_file) as pdf:
                 text = ""
-                for page in pdf.pages:
-                    text += page.extract_text() + "\n"
-            return text
+                # Adjust page numbers to 0-based index
+                start_idx = start_page - 1
+                end_idx = end_page if end_page is not None else len(pdf.pages)
+                
+                # Get text from selected pages
+                for page_num in range(start_idx, end_idx):
+                    if page_num < len(pdf.pages):
+                        text += pdf.pages[page_num].extract_text() + "\n"
+                return text
         except Exception as e:
             return f"Error extracting PDF text: {str(e)}"
-
-    
+        
     # ----------this function defines the main prompt that is passed to the LLM for financial statement analysis & insights -------- #
 
     def analyze_document(self, text, analysis_type="Financial Statements Only"):
@@ -174,39 +179,74 @@ class FinancialDocumentAnalyzer:
 
 # Main app logic
 def main():
-    authenticate(st.secrets["openai"])  # Make sure this runs first
+    # Initialize OpenAI first
+    authenticate(st.secrets["openai"])
+    
     st.title("📊 Financial Statement Analyzer")
     st.write("Upload financial statements for automated analysis")
-
-    # Create analyzer instance
-    analyzer = FinancialDocumentAnalyzer()  # Move this inside main
-
-    analysis_type = st.selectbox(
-        "Select Analysis Type",
-        [
-            "Financial Statements Only",
-            "Management Commentary Analysis",
-            "Risk Factors Assessment",
-            "Management Commentary vs Financial Performance",
-        ],
-        key="analysis_type_select"
-    )
-
-    st.write(analysis_descriptions[analysis_type])
 
     uploaded_file = st.file_uploader("Choose a PDF file", type="pdf", key="pdf_uploader")
 
     if uploaded_file is not None:
         try:
-            with st.spinner('Analyzing document...'):
-                # Extract text
-                text = analyzer.extract_text_from_pdf(uploaded_file)
-                if text.startswith("Error"):
-                    st.error(text)
-                else:
-                    # Perform analysis
-                    analysis = analyzer.analyze_document(text, analysis_type)
-                    st.write(analysis)
+            # Create analyzer instance
+            analyzer = FinancialDocumentAnalyzer()
+            
+            # First get total pages
+            with pdfplumber.open(uploaded_file) as pdf:
+                total_pages = len(pdf.pages)
+                st.write(f"Total pages in document: {total_pages}")
+
+            # Section selection
+            section_option = st.selectbox(
+                "Select Document Section to Analyze",
+                [
+                    "Financial Tables Only",
+                    "Management Discussion Section",
+                    "Risk Factors Section",
+                    "Custom Page Range"
+                ],
+                key="section_select"
+            )
+
+            # Page range selection based on section
+            if section_option == "Custom Page Range":
+                col1, col2 = st.columns(2)
+                with col1:
+                    start_page = st.number_input("Start Page", min_value=1, max_value=total_pages, value=1)
+                with col2:
+                    end_page = st.number_input("End Page", min_value=1, max_value=total_pages, value=min(5, total_pages))
+            else:
+                # Default ranges based on section (these should be adjusted based on document structure)
+                page_ranges = {
+                    "Financial Tables Only": (1, 5),
+                    "Management Discussion Section": (6, 10),
+                    "Risk Factors Section": (11, 15)
+                }
+                start_page, end_page = page_ranges.get(section_option, (1, 5))
+
+            # Analysis type selection
+            analysis_type = st.selectbox(
+                "Select Analysis Type",
+                [
+                    "Financial Statements Only",
+                    "Management Commentary Analysis",
+                    "Risk Factors Assessment",
+                    "Management Commentary vs Financial Performance",
+                ],
+                key="analysis_type_select"
+            )
+
+            if st.button("Analyze"):
+                with st.spinner('Analyzing document...'):
+                    # Extract text from selected pages only
+                    text = analyzer.extract_text_from_pdf(uploaded_file, start_page, end_page)
+                    if text.startswith("Error"):
+                        st.error(text)
+                    else:
+                        analysis = analyzer.analyze_document(text, analysis_type)
+                        st.write(analysis)
+
         except Exception as e:
             st.error(f"Error during analysis: {str(e)}")
 
