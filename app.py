@@ -44,10 +44,28 @@ class FinancialDocumentAnalyzer:
     # Different prompts for different analysis types
         prompts = {
             "Financial Statements Only": """
-             You are a financial analyst. Your task is to:
-        1. FIRST: Carefully read and extract all financial numbers from the text
-        2. SECOND: Calculate required metrics using extracted numbers
-        3. THIRD: Present a clear financial analysis in the exact html format below with ACTUAL NUMBERS (no placeholders0
+              You are a financial analyst. CRITICAL: Extract ACTUAL NUMBERS from the text and perform calculations.
+
+        Process:
+        1. First search for and extract these specific numbers:
+           - Revenue figures (current and previous)
+           - Gross profit/loss amounts
+           - Operating profit/loss
+           - Net profit/loss
+           - Current assets and liabilities
+           - Total debt and equity
+
+        2. Then calculate these exact metrics:
+           - Growth = ((Current - Previous)/Previous) × 100
+           - Gross Margin = (Gross Profit/Revenue) × 100
+           - Operating Margin = (Operating Profit/Revenue) × 100
+           - Net Margin = (Net Profit/Revenue) × 100
+           - Current Ratio = Current Assets/Current Liabilities
+           - Quick Ratio = (Current Assets - Inventory)/Current Liabilities
+           - Debt/Equity = Total Debt/Total Equity
+
+        3. Present in this EXACT format with ACTUAL NUMBERS (no [X] or [Y] placeholders):
+
              
         <h2>📈 Revenue Analysis</h2>
         <table>
@@ -140,18 +158,13 @@ class FinancialDocumentAnalyzer:
         • [Second most important observation]
         • [Key risk or opportunity]
 
-        CRITICAL INSTRUCTIONS:
-        1. Replace ALL placeholders with actual numbers from the document.DO NOT LEAVE ANY VALUE BLANK OR AS PLACEHOLDER(e.g:[X])
-        2. Use exact HTML table format shown
-        3. Show percentage signs (%) where applicable
-        4. Use 🟢 for good performance, 🔴 for below benchmark
-        5. Round percentages to 2 decimal places
-        6. Use $M for millions in monetary values
-        7. If you can't find a specific number, write "Not Available" 
-        8. If you can't calculate something, write "Insufficient Data"
-        9. ALWAYS show your source numbers from the text
-        10.For each table row, cite where you found the numbers
-        11.Show brief calculation method for derived metrics
+        RULES:
+        - Must find and use actual numbers
+        - Write "Data not found" if number isn't in text
+        - Status: 🟢 if better than benchmark, 🔴 if worse
+        - Round all percentages to 2 decimal places
+        - Include '$' for monetary values
+        - Must calculate all possible ratios
 
         Document Text:
         {text}
