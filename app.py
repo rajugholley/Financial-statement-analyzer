@@ -63,8 +63,9 @@ class FinancialDocumentAnalyzer:
            - Current Ratio = Current Assets/Current Liabilities
            - Quick Ratio = (Current Assets - Inventory)/Current Liabilities
            - Debt/Equity = Total Debt/Total Equity
+        3. key highight must be displayed in bullet points with each bullet point in one line   
 
-        3. Present in this EXACT format with ACTUAL NUMBERS (no [X] or [Y] placeholders):
+        4. Present in this EXACT format with ACTUAL NUMBERS (no [X] or [Y] placeholders):
 
              
         <h2>📈 Revenue Analysis</h2>
