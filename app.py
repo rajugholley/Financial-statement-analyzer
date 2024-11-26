@@ -84,7 +84,6 @@ class FinancialDocumentAnalyzer:
             <tr>
                 <th>Metric</th>
                 <th>Value</th>
-                <th>Industry Avg</th>
                 <th>Status</th>
             </tr>
             <tr>
@@ -112,7 +111,6 @@ class FinancialDocumentAnalyzer:
             <tr>
                 <th>Ratio</th>
                 <th>Value</th>
-                <th>Benchmark</th>
                 <th>Status</th>
             </tr>
             <tr>
